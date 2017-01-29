@@ -8,6 +8,7 @@ import google.hash.code.score.ScoreProcessor;
 import org.slf4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -15,7 +16,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Main {
     public static final Logger LOGGER = getLogger(Main.class);
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, URISyntaxException {
         final InputReader inputReader = new InputReader();
         final OutputFileReader outputFileReader = new OutputFileReader();
         final ScoreProcessor scoreProcessor = new ScoreProcessor();

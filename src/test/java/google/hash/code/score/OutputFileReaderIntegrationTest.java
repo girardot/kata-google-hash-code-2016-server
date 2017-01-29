@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static google.hash.code.model.Instruction.buildDeliverInstruction;
@@ -24,7 +25,7 @@ public class OutputFileReaderIntegrationTest {
     }
 
     @Test
-    public void should_parse_output_file() throws FileNotFoundException {
+    public void should_parse_output_file() throws FileNotFoundException, URISyntaxException {
         // Given / When
         final List<ScoreDrone> drones = outputFileReader.parse("/simple.out", world);
 

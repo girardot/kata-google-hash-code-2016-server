@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,10 @@ import static java.lang.Integer.parseInt;
 
 public class OutputFileReader {
 
-    public List<ScoreDrone> parse(String outputFileName, World world) throws FileNotFoundException {
+    public List<ScoreDrone> parse(Path filePath, World world) throws FileNotFoundException {
         List<ScoreDrone> drones = new ArrayList<>();
-        try (Stream<String> lines = Files.lines(Paths.get(InputReader.class.getResource(outputFileName).toURI()))) {
+
+        try (Stream<String> lines = Files.lines(filePath)) {
 
             List<String> collectedLines = lines.skip(1).collect(Collectors.toList());
             collectedLines
@@ -62,10 +64,15 @@ public class OutputFileReader {
                     });
 
 
-        } catch (URISyntaxException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return drones;
+    }
+
+    public List<ScoreDrone> parse(String outputFileName, World world) throws FileNotFoundException, URISyntaxException {
+        final Path filePath = Paths.get(InputReader.class.getResource(outputFileName).toURI());
+        return parse(filePath, world);
     }
 }
 
