@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static google.hash.code.InputType.SIMPLE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static spark.Spark.*;
 
@@ -47,9 +46,11 @@ public class Server {
         }, new FreeMarkerEngine());
 
 
-        post("/upload", "multipart/form-data", (request, response) -> {
+        post("/upload/:inputType", "multipart/form-data", (request, response) -> {
 
             String teamName = "team A";
+            InputType inputType = InputType.valueOf(request.params("inputType").toUpperCase());
+
             String location = "out/" + teamName + "-";          // the directory location where files will be stored
             long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
             long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
@@ -70,11 +71,11 @@ public class Server {
                 System.out.println("Filename: " + part.getSubmittedFileName());
             }
 
-            String fName = request.raw().getPart("simple").getSubmittedFileName();
+            String fName = request.raw().getPart(inputType.label).getSubmittedFileName();
             System.out.println("Title: " + request.raw().getParameter("title"));
             System.out.println("File: " + fName);
 
-            Part uploadedFile = request.raw().getPart("simple");
+            Part uploadedFile = request.raw().getPart(inputType.label);
             Path out = Paths.get(location + fName);
             try (final InputStream in = uploadedFile.getInputStream()) {
                 Files.copy(in, out, REPLACE_EXISTING);
@@ -85,11 +86,11 @@ public class Server {
             parts = null;
             uploadedFile = null;
 
-            final World world = inputReader.parse("/simple.in");
+            final World world = inputReader.parse("/" + inputType.label + ".in");
             final List<ScoreDrone> drones = outputFileReader.parse(out, world);
 
             final TeamScore teamScore = scores.getOrDefault(teamName, new TeamScore(teamName));
-            teamScore.addScore(new Score(SIMPLE, scoreProcessor.computeScore(world, drones)));
+            teamScore.addScore(new Score(inputType, scoreProcessor.computeScore(world, drones)));
             scores.putIfAbsent(teamName, teamScore);
 
             response.redirect("/");
