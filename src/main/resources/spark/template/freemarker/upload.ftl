@@ -1,30 +1,69 @@
 <html>
+<head>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
 
-<a href="">home</a><br>
-<form method="post" action="upload" enctype="multipart/form-data">
-    <table>
-        <tr>
-            <th></th>
-            <th></th>
-            <th>score</th>
-        </tr>
-        <tr>
-            <td>Team</td>
-            <td><label for="team">Team Name</label><input id="team" type="text"></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>
-                simple : <input name="simple" type="file"/>
-            </td>
-            <td>
-                <input id="addFile" type="submit" value="Submit"/>
-            </td>
-            <td></td>
-        </tr>
+<#include "menu.ftl">
 
-    </table>
-</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Team</th>
+        <th>Input Type</th>
+        <th>Upload</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>${teamName}</td>
+        <td>Simple</td>
+        <td>
+            <form method="post" action="upload" enctype="multipart/form-data">
+                <label class="btn btn-default btn-file">
+                    Browse <input name="simple" type="file" style="display: none;">
+                </label>
+                <input id="addFile" type="submit" value="Submit" class="btn btn-success"/>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>${teamName}</td>
+        <td>Busy Day</td>
+        <td>
+            <form method="post" action="upload" enctype="multipart/form-data">
+                <label class="btn btn-default btn-file">
+                    Browse <input name="busy_day" type="file" style="display: none;">
+                </label>
+                <input id="addFile" type="submit" value="Submit" class="btn btn-success"/>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>${teamName}</td>
+        <td>Redundancy</td>
+        <td>
+            <form method="post" action="upload" enctype="multipart/form-data">
+                <label class="btn btn-default btn-file">
+                    Browse <input name="redundancy" type="file" style="display: none;">
+                </label>
+                <input id="addFile" type="submit" value="Submit" class="btn btn-success"/>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>${teamName}</td>
+        <td>Mother of all Warehouses</td>
+        <td>
+            <form method="post" action="upload" enctype="multipart/form-data">
+                <label class="btn btn-default btn-file">
+                    Browse <input name="mother_of_all_warehouses" type="file" style="display: none;">
+                </label>
+                <input id="addFile" type="submit" value="Submit" class="btn btn-success"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

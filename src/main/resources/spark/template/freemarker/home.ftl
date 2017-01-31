@@ -1,15 +1,30 @@
 <html>
+<head>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-<a href="">home</a><br>
-<a href="upload">upload</a><br>
 
-scores : <br>
-<#list scoresByTeam as scoreByTeam>
-${scoreByTeam.name} :
-    <#list scoreByTeam.scores as score>
-    ${score.inputType}
-    ${score.value} <br>
+<#include "menu.ftl">
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Team</th>
+        <th>Input Type</th>
+        <th>Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    <#list scoresByTeam as scoreByTeam>
+        <#list scoreByTeam.scores as score>
+        <tr>
+            <td>${scoreByTeam.name}</td>
+            <td>${score.inputType}</td>
+            <td>${score.value}</td>
+        </tr>
+        </#list>
     </#list>
-</#list>
+    </tbody>
+</table>
 </body>
 </html>

@@ -32,6 +32,8 @@ public class Server {
         final Map<String, TeamScore> scores = new HashMap<>();
 
         port(5000);
+        staticFiles.location("/public");
+
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("scoresByTeam", scores.values());
@@ -40,6 +42,7 @@ public class Server {
 
         get("/upload", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
+            attributes.put("teamName", "team A");
             return new ModelAndView(attributes, "upload.ftl");
         }, new FreeMarkerEngine());
 
