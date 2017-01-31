@@ -3,11 +3,13 @@ package google.hash.code.score;
 import google.hash.code.model.*;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static google.hash.code.model.InstructionType.LOAD;
+import static google.hash.code.score.ActionType.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ScoreDrone {
@@ -21,6 +23,8 @@ public class ScoreDrone {
     private final List<Integer> productWeights;
     private final List<Warehouse> warehousesAtBeginning;
     public final int index;
+
+    private final List<Action> actions = new ArrayList<>();
 
     public ScoreDrone(int index,
                       List<Instruction> instructions,
@@ -62,6 +66,7 @@ public class ScoreDrone {
             position = position.moveToDestination(destination);
             LOGGER.debug(" -----> new drone(" + index + ") position is  " + position);
             hasMove = true;
+            actions.add(new Action(MOVE, position));
         }
         return hasMove;
     }
@@ -79,6 +84,7 @@ public class ScoreDrone {
                 warehouse.getItems().remove(itemInWarehouse);
                 warehouse.getItems().add(new Item(instruction.getProductType(), numberAvailable - instruction.getProductNumber()));
                 loadProduct(instruction.getProductType(), instruction.getProductNumber());
+                actions.add(new Action(ActionType.LOAD, instruction.getDestination()));
                 LOGGER.debug("Drone(" + index + ") is loading " + instruction.getProductNumber() + " item(s) " + instruction.getProductType() + " from warehouse " + instruction.getWareHouse().index);
             } else {
                 LOGGER.debug("WARNING !!!!!!! Product Not Available in warehouse !!!!!!!!!!!!");
@@ -93,11 +99,20 @@ public class ScoreDrone {
     public void deliver(Instruction instruction) {
         if (hasProducts(instruction.getProductType(), instruction.getProductNumber())) {
             unloadProduct(instruction.getProductType(), instruction.getProductNumber());
+            actions.add(new Action(DELIVER, instruction.getDestination()));
             LOGGER.debug("Drone(" + index + ") is deliver item " + instruction.getProductType() + " to order " + instruction.getOrder().index);
         } else {
             LOGGER.debug("WARNING !!!!!!! Deliver failed !!!!!!!!!!!!");
             LOGGER.debug("WARNING !!!!!!! Drone(" + index + ") does not has " + instruction.getProductNumber() + " " + instruction.getProductType());
         }
+    }
+
+    public void doNothing() {
+        actions.add(new Action(WAIT, position));
+    }
+
+    public List<Action> getActions() {
+        return actions;
     }
 
     private boolean hasProducts(int productType, int productNumber) {

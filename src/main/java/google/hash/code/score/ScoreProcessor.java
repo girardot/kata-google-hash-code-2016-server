@@ -34,6 +34,7 @@ public class ScoreProcessor {
                 LOGGER.debug("xxxxxxxxxxxxxxxxxxxx Drone: " + drone.index + " xxxxxxxxxxxxxxxxxxxx");
 
                 if (drone.getCurrentInstruction() == null) {
+                    drone.doNothing();
                     LOGGER.debug("Drone(" + drone.index + ") do not have instruction");
                 } else {
                     LOGGER.debug("Drone(" + drone.index + ") instruction is : " + drone.getCurrentInstruction());
