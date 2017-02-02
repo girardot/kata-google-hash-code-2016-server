@@ -28,5 +28,10 @@ public class TeamScore {
     public Integer getTeamScore() {
         return scores.values().stream().mapToInt(Score::getValue).sum();
     }
+
+    public String getColor() {
+        return String.format("#%X", name.hashCode());
+    }
+
 }
 

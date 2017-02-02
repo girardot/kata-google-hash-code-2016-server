@@ -22,4 +22,16 @@ public class TeamScoreTest {
         //Then
         assertThat(score).isEqualTo(306);
     }
+
+    @Test
+    public void generate_color_from_name() {
+        // Given
+        final TeamScore teamScore = new TeamScore("My team");
+
+        // When
+        final String color = teamScore.getColor();
+
+        //Then
+        assertThat(color).isEqualTo("#B9B36831");
+    }
 }
