@@ -15,6 +15,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,10 +62,13 @@ public class Server {
 
         post("/team", (request, response) -> {
             MultiMap<String> params = new MultiMap<>();
-            UrlEncoded.decodeTo(request.body(), params, "UTF-8");
+            final String teamName = extractTeamNameFromParam(request, params);
+
+            File directory = new File("out/" + teamName);
+            directory.mkdir();
 
             request.session(true);
-            request.session().attribute(SESSION_TEAM_NAME_FIELD, params.get("teamName").get(0));
+            request.session().attribute(SESSION_TEAM_NAME_FIELD, teamName);
             response.redirect("/");
             return "OK";
         });
@@ -74,13 +78,13 @@ public class Server {
             String teamName = getTeamNameFromSession(request);
             InputType inputType = InputType.valueOf(request.params("inputType").toUpperCase());
 
-            String location = "out/" + teamName + "-";          // the directory location where files will be stored
+            String location = "out/" + teamName + "/";          // the directory location where files will be stored
             long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
             long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
             int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
 
             MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
-                    location,
+                    "/temp",
                     maxFileSize,
                     maxRequestSize,
                     fileSizeThreshold
@@ -134,6 +138,12 @@ public class Server {
             }
         });
 
+    }
+
+    private static String extractTeamNameFromParam(Request request, MultiMap<String> params) {
+        UrlEncoded.decodeTo(request.body(), params, "UTF-8");
+        final String teamName = params.get("teamName").get(0);
+        return teamName.replace(" ", "_").trim();
     }
 
     private static String getTeamNameFromSession(Request request) {
