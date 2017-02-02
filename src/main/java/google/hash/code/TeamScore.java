@@ -24,5 +24,9 @@ public class TeamScore {
     public void addScore(Score score) {
         scores.put(score.getInputType(), score);
     }
+
+    public Integer getTeamScore() {
+        return scores.values().stream().mapToInt(Score::getValue).sum();
+    }
 }
 

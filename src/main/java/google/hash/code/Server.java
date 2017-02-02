@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.stream.Collectors.toList;
 import static spark.Spark.*;
 
 public class Server {
@@ -44,7 +45,7 @@ public class Server {
 
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("scoresByTeam", scores.values());
+            attributes.put("scoresByTeam", orderScoresByTeamScore(scores));
             return new ModelAndView(attributes, "home.ftl");
         }, new FreeMarkerEngine());
 
@@ -138,6 +139,13 @@ public class Server {
             }
         });
 
+    }
+
+    private static List<TeamScore> orderScoresByTeamScore(Map<String, TeamScore> scores) {
+        return scores.values()
+                .stream()
+                .sorted((team1, team2) -> team2.getTeamScore().compareTo(team1.getTeamScore()))
+                .collect(toList());
     }
 
     private static String extractTeamNameFromParam(Request request, MultiMap<String> params) {
