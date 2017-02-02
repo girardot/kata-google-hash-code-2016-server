@@ -99,7 +99,7 @@ public class Server {
             System.out.println("File: " + fName);
 
             Part uploadedFile = request.raw().getPart(inputType.label);
-            Path out = Paths.get(location + fName);
+            Path out = Paths.get(location + inputType.label);
             try (final InputStream in = uploadedFile.getInputStream()) {
                 Files.copy(in, out, REPLACE_EXISTING);
                 uploadedFile.delete();
