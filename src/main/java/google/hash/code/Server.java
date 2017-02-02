@@ -89,14 +89,14 @@ public class Server {
 
             Collection<Part> parts = request.raw().getParts();
             for (Part part : parts) {
-                System.out.println("Name: " + part.getName());
-                System.out.println("Size: " + part.getSize());
-                System.out.println("Filename: " + part.getSubmittedFileName());
+                LOGGER.info("Name: " + part.getName());
+                LOGGER.info("Size: " + part.getSize());
+                LOGGER.info("Filename: " + part.getSubmittedFileName());
             }
 
             String fName = request.raw().getPart(inputType.label).getSubmittedFileName();
-            System.out.println("Title: " + request.raw().getParameter("title"));
-            System.out.println("File: " + fName);
+            LOGGER.info("Title: " + request.raw().getParameter("title"));
+            LOGGER.info("File: " + fName);
 
             Part uploadedFile = request.raw().getPart(inputType.label);
             Path out = Paths.get(location + inputType.label);
