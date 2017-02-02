@@ -5,7 +5,12 @@ import google.hash.code.model.World;
 import google.hash.code.score.OutputFileReader;
 import google.hash.code.score.ScoreDrone;
 import google.hash.code.score.ScoreProcessor;
+import org.eclipse.jetty.util.MultiMap;
+import org.eclipse.jetty.util.UrlEncoded;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.ModelAndView;
+import spark.Request;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.servlet.MultipartConfigElement;
@@ -24,6 +29,9 @@ import static spark.Spark.*;
 
 public class Server {
 
+    private static final String SESSION_TEAM_NAME_FIELD = "teamName";
+    private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
+
     public static void main(String[] args) {
         final ScoreProcessor scoreProcessor = new ScoreProcessor();
         final InputReader inputReader = new InputReader();
@@ -41,14 +49,29 @@ public class Server {
 
         get("/upload", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("teamName", "team A");
+            attributes.put("teamName", getTeamNameFromSession(request));
             return new ModelAndView(attributes, "upload.ftl");
         }, new FreeMarkerEngine());
 
+        get("/team", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("teamName", getTeamNameFromSession(request));
+            return new ModelAndView(attributes, "team.ftl");
+        }, new FreeMarkerEngine());
+
+        post("/team", (request, response) -> {
+            MultiMap<String> params = new MultiMap<>();
+            UrlEncoded.decodeTo(request.body(), params, "UTF-8");
+
+            request.session(true);
+            request.session().attribute(SESSION_TEAM_NAME_FIELD, params.get("teamName").get(0));
+            response.redirect("/");
+            return "OK";
+        });
 
         post("/upload/:inputType", "multipart/form-data", (request, response) -> {
 
-            String teamName = "team A";
+            String teamName = getTeamNameFromSession(request);
             InputType inputType = InputType.valueOf(request.params("inputType").toUpperCase());
 
             String location = "out/" + teamName + "-";          // the directory location where files will be stored
@@ -97,6 +120,24 @@ public class Server {
             return "OK";
         });
 
+        exception(Exception.class, (e, request, response) -> {
+            LOGGER.error(request.body());
+            LOGGER.error(e.getMessage());
+            response.status(500);
+        });
+
+        before((request, response) -> {
+            LOGGER.info("request {}", request.pathInfo());
+            if (!request.pathInfo().contains("/team") && getTeamNameFromSession(request) == null) {
+                LOGGER.info("Unknown Team Name");
+                response.redirect("/team");
+            }
+        });
+
+    }
+
+    private static String getTeamNameFromSession(Request request) {
+        return request.session().attribute(SESSION_TEAM_NAME_FIELD);
     }
 
 }
