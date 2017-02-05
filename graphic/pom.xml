@@ -15,6 +15,7 @@
     <modules>
         <module>core</module>
         <module>desktop</module>
+        <module>html</module>
     </modules>
 
     <properties>
@@ -24,6 +25,12 @@
     <dependencyManagement>
 
         <dependencies>
+            <dependency>
+                <groupId>jgt</groupId>
+                <artifactId>core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
             <!-- core dependencies -->
             <dependency>
                 <groupId>com.badlogicgames.gdx</groupId>
@@ -110,7 +117,12 @@
                 <module>desktop</module>
             </modules>
         </profile>
-
+        <profile>
+            <id>html</id>
+            <modules>
+                <module>html</module>
+            </modules>
+        </profile>
     </profiles>
 
 </project>
