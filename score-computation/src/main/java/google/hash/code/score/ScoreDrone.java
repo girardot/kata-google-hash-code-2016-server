@@ -38,6 +38,10 @@ public class ScoreDrone {
         this.instructions = instructions;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
     public Instruction getNextInstruction() {
         currentIntruction++;
         return getCurrentInstruction();
