@@ -39,9 +39,9 @@ public class DesktopLauncher {
             World world = inputReader.parse("/" + fileName);
 
             final List<ScoreDrone> allTeamDrones = new ArrayList<>();
-//                final List<ScoreDrone> allTeamDrones = outputFileReader.parse("/" + fileName.replace(".in", ".out"), world);
             for (TeamScore team : teams) {
                 String outFilePath = "/out/" + team.getName() + "/" + fileName.replace(".in", "");
+                //String outFilePath = "/" + fileName.replace(".in", ".out");
                 if (teamFileExist(outFilePath)) {
                     final List<ScoreDrone> drones = outputFileReader.parse(outFilePath, world);
                     LOGGER.info("Score Processing, Actions computing");
@@ -57,7 +57,7 @@ public class DesktopLauncher {
                     .collect(Collectors.toList());
 
             new LwjglApplication(
-                    new MyGdxGame(warehouses, allTeamDrones, world.orders, world.columns, world.rows),
+                    new MyGdxGame(warehouses, allTeamDrones, world.orders, world.columns, world.rows, world.turns),
                     buildLwjglApplicationConfiguration()
             );
         }

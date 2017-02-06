@@ -5,10 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import google.hash.code.model.GCustomer;
-import google.hash.code.model.GDrone;
-import google.hash.code.model.GPosition;
-import google.hash.code.model.GWarehouse;
 import google.hash.code.model.*;
 import google.hash.code.score.ScoreDrone;
 
@@ -16,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainStage extends Stage {
+
+    private static final int MAX_TIME_IN_SEC = 300;
+    public final float timePerTurn;
 
     public final float widthUnit;
     public final float heightUnit;
@@ -27,7 +26,8 @@ public class MainStage extends Stage {
     public static final Texture texture = new Texture("map.png");
     private static final Image background = new Image(texture);
 
-    public MainStage(int width, int height, List<Position> warehouses, List<ScoreDrone> drones, List<Order> orders) {
+    public MainStage(int width, int height, List<Position> warehouses, List<ScoreDrone> drones, List<Order> orders, int totalTurn) {
+        timePerTurn = Math.min(0.5f, MAX_TIME_IN_SEC / totalTurn);
         widthUnit = Gdx.graphics.getWidth() / width;
         heightUnit = Gdx.graphics.getHeight() / height;
 
@@ -50,6 +50,9 @@ public class MainStage extends Stage {
                 .map(drone -> new GDrone(this, drone.getActions()))
                 .collect(Collectors.toList());
 
+        final GTurn gTurn = new GTurn(this, totalTurn);
+
         this.drones.forEach(GDrone::start);
+        gTurn.start();
     }
 }

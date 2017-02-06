@@ -16,7 +16,6 @@ import static google.hash.code.score.ActionType.*;
 
 public class GDrone {
 
-    public static final float TIME_PER_TURN = 0.5f;
     public static final int DRONE_WIDTH = 25;
     public static final int DRONE_HEIGHT = 25;
 
@@ -39,12 +38,12 @@ public class GDrone {
         actions.stream().forEach(action -> {
                     if (MOVE.equals(action.type)) {
                         GPosition gPosition = new GPosition(action.position, stage.widthUnit, stage.heightUnit);
-                        sequence.addAction(moveTo(gPosition.x, gPosition.y, TIME_PER_TURN));
+                        sequence.addAction(moveTo(gPosition.x, gPosition.y, stage.timePerTurn));
                     } else if (LOAD.equals(action.type) || DELIVER.equals(action.type)) {
-                        sequence.addAction(scaleBy(-0.5f, -0.5f, TIME_PER_TURN / 2));
-                        sequence.addAction(scaleBy(0.5f, 0.5f, TIME_PER_TURN / 2));
+                        sequence.addAction(scaleBy(-0.5f, -0.5f, stage.timePerTurn / 2));
+                        sequence.addAction(scaleBy(0.5f, 0.5f, stage.timePerTurn / 2));
                     } else {
-                        sequence.addAction(delay(TIME_PER_TURN));
+                        sequence.addAction(delay(stage.timePerTurn));
                     }
                 }
         );

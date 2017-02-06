@@ -17,20 +17,27 @@ public class MyGdxGame extends ApplicationAdapter {
     private final List<Order> orders;
     private final int width;
     private final int height;
+    private final int totalTurn;
 
     private MainStage mainStage;
 
-    public MyGdxGame(List<Position> warehouses, List<ScoreDrone> drones, List<Order> orders, int width, int height) {
+    public MyGdxGame(List<Position> warehouses,
+                     List<ScoreDrone> drones,
+                     List<Order> orders,
+                     int width,
+                     int height,
+                     int totalTurn) {
         this.warehouses = warehouses;
         this.drones = drones;
         this.orders = orders;
         this.width = width;
         this.height = height;
+        this.totalTurn = totalTurn;
     }
 
     @Override
     public void create() {
-        mainStage = new MainStage(width, height, warehouses, drones, orders);
+        mainStage = new MainStage(width, height, warehouses, drones, orders, totalTurn);
     }
 
     @Override
