@@ -1,5 +1,6 @@
 package google.hash.code.model;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -25,9 +26,10 @@ public class GDrone {
     private final GPosition initialPosition = new GPosition(0, 0);
     private final Image movingDrone = new Image(new Texture("drone.png"));
 
-    public GDrone(MainStage stage, List<google.hash.code.score.Action> actions) {
+    public GDrone(MainStage stage, List<google.hash.code.score.Action> actions, Color color) {
 
         movingDrone.setSize(DRONE_WIDTH, DRONE_HEIGHT);
+        movingDrone.setColor(color);
         group.addActor(movingDrone);
 
         group.setPosition(this.initialPosition.x, this.initialPosition.y);

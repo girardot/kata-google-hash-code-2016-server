@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,15 +40,13 @@ public class DesktopLauncher {
             LOGGER.info("File " + fileName + " loading");
             World world = inputReader.parse("/" + fileName);
 
-            final List<ScoreDrone> allTeamDrones = new ArrayList<>();
             for (TeamScore team : teams) {
-                String outFilePath = "/out/" + team.getName() + "/" + fileName.replace(".in", "");
-                //String outFilePath = "/" + fileName.replace(".in", ".out");
+                String outFilePath = "c:/Users/juju/Dropbox/code/kata-google-hash-code-2016-server/out/" + team.getName() + "/" + fileName.replace(".in", "");
                 if (teamFileExist(outFilePath)) {
-                    final List<ScoreDrone> drones = outputFileReader.parse(outFilePath, world);
+                    final List<ScoreDrone> drones = outputFileReader.parse(Paths.get(outFilePath), world);
+                    team.getDrones().addAll(drones);
                     LOGGER.info("Score Processing, Actions computing");
                     LOGGER.info("Score => {} ", scoreProcessor.computeScore(world, drones));
-                    allTeamDrones.addAll(drones);
                 } else {
                     LOGGER.info("Team {} does have the file {}", team.getName(), outFilePath);
                 }
@@ -57,7 +57,7 @@ public class DesktopLauncher {
                     .collect(Collectors.toList());
 
             new LwjglApplication(
-                    new MyGdxGame(warehouses, allTeamDrones, world.orders, world.columns, world.rows, world.turns),
+                    new MyGdxGame(warehouses, new ArrayList<>(), world.orders, world.columns, world.rows, world.turns, teams),
                     buildLwjglApplicationConfiguration()
             );
         }
@@ -65,7 +65,7 @@ public class DesktopLauncher {
     }
 
     private static boolean teamFileExist(String filePath) {
-        return InputReader.class.getResource(filePath) != null;
+        return Files.exists(Paths.get(filePath));
     }
 
     private static LwjglApplicationConfiguration buildLwjglApplicationConfiguration() {

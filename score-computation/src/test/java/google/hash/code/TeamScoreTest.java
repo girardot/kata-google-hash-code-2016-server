@@ -1,5 +1,6 @@
 package google.hash.code;
 
+import google.hash.code.model.Color;
 import org.junit.Test;
 
 import static google.hash.code.InputType.*;
@@ -29,9 +30,9 @@ public class TeamScoreTest {
         final TeamScore teamScore = new TeamScore("My team");
 
         // When
-        final String color = teamScore.getColor();
+        final Color color = teamScore.getColor();
 
         //Then
-        assertThat(color).isEqualTo("#B9B36831");
+        assertThat(color.toString()).isEqualTo("#e6b80a");
     }
 }

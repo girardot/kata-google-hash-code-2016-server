@@ -18,6 +18,7 @@ public class MyGdxGame extends ApplicationAdapter {
     private final int width;
     private final int height;
     private final int totalTurn;
+    private final List<TeamScore> teams;
 
     private MainStage mainStage;
 
@@ -26,18 +27,20 @@ public class MyGdxGame extends ApplicationAdapter {
                      List<Order> orders,
                      int width,
                      int height,
-                     int totalTurn) {
+                     int totalTurn,
+                     List<TeamScore> teams) {
         this.warehouses = warehouses;
         this.drones = drones;
         this.orders = orders;
         this.width = width;
         this.height = height;
         this.totalTurn = totalTurn;
+        this.teams = teams;
     }
 
     @Override
     public void create() {
-        mainStage = new MainStage(width, height, warehouses, drones, orders, totalTurn);
+        mainStage = new MainStage(width, height, warehouses, drones, orders, totalTurn, teams);
     }
 
     @Override
